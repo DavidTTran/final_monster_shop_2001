@@ -74,4 +74,14 @@ RSpec.describe 'As a merchant user on the merchant dashboard page', type: :featu
 
     expect(current_path).to eql('/merchant/items')
   end
+
+  it "has a link to view available discounts" do
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant_user)
+
+    visit "/merchant"
+
+    click_link("Discounts")
+
+    expect(current_path).to eq("/merchant/discounts")
+  end
 end
