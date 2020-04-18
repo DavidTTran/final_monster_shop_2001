@@ -64,12 +64,12 @@ Rails.application.routes.draw do
     get '/', to: "dashboard#show"
     # get "/items", to: "items#index"
     # get 'items/:id/edit', to: "items#edit"
-
     # get "/items/new", to: "items#new"
     # post "/items", to: "items#create"
     patch '/:order_id/:item_id', to: "orders#update"
     get "/orders/:id", to: "orders#show"
     # resources :items, only: [:destroy]
+    resources :discounts, only: [:index, :show, :create, :new, :edit, :destroy, :update]
   end
 
   namespace :admin do

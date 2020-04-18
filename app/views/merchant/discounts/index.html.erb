@@ -1,0 +1,16 @@
+<h1>Discounts Dashboard</h1>
+<center>
+  <%= link_to "Create Discount", new_merchant_discount_path %>
+</center>
+<section class="grid-container">
+  <section class="grid-item discounts-list">
+    <% @discounts.each do |discount| %>
+    <section id="discount-<%= discount.id %>">
+      Quantity: <%= discount.quantity %> items<br>
+      Percentage: <%= discount.percentage %>% off<br>
+      <%= link_to "Update Discount", edit_merchant_discount_path(id: discount.id) %><br>
+      <%= link_to "Remove Discount", "/merchant/discounts/#{discount.id}", method: :delete %>
+    </section>
+    <% end %>
+  </section>
+</section>

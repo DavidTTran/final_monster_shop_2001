@@ -1,0 +1,13 @@
+<h1>Update Discount</h1>
+<center>
+  <%= form_tag merchant_discount_path, method: :put do %>
+    <%= label_tag :quantity %>
+    <%= text_field_tag :quantity, @discount.quantity %>
+
+    <%= label_tag :percentage %>
+    <%= text_field_tag :percentage, @discount.percentage %>
+
+    <%= submit_tag "Save Discount" %>
+  <% end %>
+  <br><%= link_to "Go Back", request.referer %>
+</center>
