@@ -1,17 +1,26 @@
 <h1>Profile Orders</h1>
-
-<section class="orders-index">
-  <% current_user.orders.each do |order| %>
-    <section id="order-<%= order.id %>">
-      <p><%= link_to "#{order.id}", "/profile/orders/#{order.id}" %></p>
-      <p><%= order.created_at %></p>
-      <p><%= order.updated_at %></p>
-      <p><%= order.status %></p>
-      <p><%= order.total_quantity %></p>
-      <p><%= order.grandtotal %></p>
-    </section>
-    <% end %>
-</section>
+<table>
+  <tr>
+    <th>Order ID</th>
+    <th>Ordered On</th>
+    <th>Last Updated</th>
+    <th>Status</th>
+    <th>Total Quantity</th>
+    <th>Total</th>
+  </tr>
+  <section class="orders-index">
+    <% current_user.orders.each do |order| %>
+      <tr id="order-<%= order.id %>">
+        <td><%= link_to "#{order.id}", "/profile/orders/#{order.id}" %></td>
+        <td><%= order.created_at %></td>
+        <td><%= order.updated_at %></td>
+        <td><%= order.status %></td>
+        <td><%= order.total_quantity %></td>
+        <td><%= order.grandtotal %></td>
+      </tr>
+      <% end %>
+  </section>
+</table>
 <center>
   <br><%= link_to "Go Back", request.referer %>
 </center>
