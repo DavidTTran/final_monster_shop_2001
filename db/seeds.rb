@@ -48,9 +48,9 @@ merchant_3 = User.create(name: "Employee(Karen)", address: "123 Test St", city: 
 merchant_4 = User.create(name: "Employee(Jenn)", address: "123 Test St", city: "Tampa Bay", state: "FL", zip: "80204", email: "merchant4@example.com", password: "password_merchant", role: 2)
 
 #discounts
-merchant.discounts.create(quantity: 10, percentage: 5, applied: false)
-merchant.discounts.create(quantity: 20, percentage: 10, applied: false)
-merchant.discounts.create(quantity: 3, percentage: 2, applied: false)
+bike_shop.discounts.create(quantity: 10, percentage: 5, name: "It's the Weekend!")
+bike_shop.discounts.create(quantity: 20, percentage: 10, name: "Holiday Discount!")
+tires_shop.discounts.create(quantity: 3, percentage: 2, name: "We Appreciate You!")
 
 #employees
 bike_shop.add_employee(merchant)

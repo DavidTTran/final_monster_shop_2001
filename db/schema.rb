@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200418171903) do
+ActiveRecord::Schema.define(version: 20200419042033) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,8 +18,8 @@ ActiveRecord::Schema.define(version: 20200418171903) do
   create_table "discounts", force: :cascade do |t|
     t.integer "quantity", default: 0
     t.integer "percentage", default: 0
-    t.boolean "applied", default: false
     t.bigint "merchant_id"
+    t.string "name"
     t.index ["merchant_id"], name: "index_discounts_on_merchant_id"
   end
 
@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 20200418171903) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "status", default: true
+    t.float "discounted_price"
     t.index ["merchant_id"], name: "index_items_on_merchant_id"
   end
 
