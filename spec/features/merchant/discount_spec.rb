@@ -39,6 +39,13 @@ describe "merchant discounts" do
     click_on "Create Discount"
 
     expect(page).to have_content("Quantity is not a number.")
+
+    fill_in :name, with: "Test Discount"
+    fill_in :quantity, with: 0
+    fill_in :percentage, with: 101
+    click_on "Create Discount"
+
+    expect(page).to have_content("Quantity must be greater than 0 and Percentage must be less than or equal to 100.")
   end
 
   it "can update discounts with appropriate fields" do

@@ -80,7 +80,7 @@ RSpec.describe 'As a merchant user on the merchant dashboard page', type: :featu
 
     visit "/merchant"
 
-    click_link("Discounts")
+    click_link("Discounts Dashboard")
 
     expect(current_path).to eq("/merchant/discounts")
   end
