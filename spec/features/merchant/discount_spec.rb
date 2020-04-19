@@ -18,11 +18,13 @@ describe "merchant discounts" do
 
     expect(current_path).to eq("/merchant/discounts/new")
 
+    fill_in :name, with: "Test Discount"
     fill_in :quantity, with: 10
     fill_in :percentage, with: 5
     click_on "Create Discount"
 
     expect(current_path).to eq("/merchant/discounts")
+    expect(page).to have_content("Name: Test Discount")
     expect(page).to have_content("Quantity: 10 items")
     expect(page).to have_content("Percentage: 5% off")
   end
@@ -31,6 +33,7 @@ describe "merchant discounts" do
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant_user)
     visit "/merchant/discounts/new"
 
+    fill_in :name, with: "Test Discount"
     fill_in :quantity, with: "ten"
     fill_in :percentage, with: 5
     click_on "Create Discount"
@@ -40,12 +43,13 @@ describe "merchant discounts" do
 
   it "can update discounts with appropriate fields" do
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant_user)
-    discount_1 = @bike_shop.discounts.create(quantity: 10, percentage: 5)
+    discount_1 = @bike_shop.discounts.create(name: "Test Discount", quantity: 10, percentage: 5)
 
     visit "/merchant/discounts"
     within(".discounts-list") do
       within("#discount-#{discount_1.id}") do
         expect(page).to have_content("Quantity: 10 items")
+        expect(page).to have_content("Name: Test Discount")
         expect(page).to have_content("Percentage: 5% off")
         click_link("Update Discount")
       end
@@ -59,6 +63,7 @@ describe "merchant discounts" do
     click_on "Save Discount"
     expect(page).to have_content("Quantity is not a number.")
 
+    fill_in :name, with: "Test Discount"
     fill_in :quantity, with: 20
     fill_in :percentage, with: 5
     click_on "Save Discount"
@@ -66,6 +71,7 @@ describe "merchant discounts" do
     expect(current_path).to eq("/merchant/discounts")
     within("#discount-#{discount_1.id}") do
       expect(page).to have_content("Quantity: 20 items")
+      expect(page).to have_content("Name: Test Discount")
       expect(page).to have_content("Percentage: 5% off")
       click_link("Update Discount")
     end
@@ -73,8 +79,8 @@ describe "merchant discounts" do
 
   it "can delete discounts" do
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant_user)
-    discount_1 = @bike_shop.discounts.create(quantity: 10, percentage: 5)
-    discount_2 = @bike_shop.discounts.create(quantity: 20, percentage: 10)
+    discount_1 = @bike_shop.discounts.create(name: "Test Discount", quantity: 10, percentage: 5)
+    discount_2 = @bike_shop.discounts.create(name: "Test Discount", quantity: 20, percentage: 10)
 
     visit "/merchant/discounts"
     within(".discounts-list") do
@@ -91,8 +97,8 @@ describe "merchant discounts" do
   end
 
   it "automatically applies to items that equal or are greater than the quantity" do
-    discount_1 = @bike_shop.discounts.create(quantity: 5, percentage: 50)
-    discount_2 = @bike_shop.discounts.create(quantity: 100, percentage: 90)
+    @bike_shop.discounts.create(name: "Test Discount", quantity: 5, percentage: 50)
+    @bike_shop.discounts.create(name: "6 Items required", quantity: 6, percentage: 90)
     rim = @bike_shop.items.create(name: "Rim", description: "Strong spokes.", price: 10, image: "https://cdn10.bigcommerce.com/s-6w6qcuo4/product_images/attribute_rule_images/19719_zoom_1516397191.jpg", inventory: 30)
     user = User.create(name: "User(Colin)", address: "123 Test St", city: "New York", state: "NY", zip: "80204", email: "user@example.com", password: "password_regular", role: 1)
 
@@ -106,5 +112,46 @@ describe "merchant discounts" do
     expect(page).to have_content("Total: $40.00")
     click_on "+1"
     expect(page).to have_content("Total: $25.00")
+  end
+
+  it "removes the discount if the quantity drop below the discount_quantity" do
+    @bike_shop.discounts.create(name: "Test Quantity", quantity: 5, percentage: 50)
+    @bike_shop.discounts.create(name: "6 Items Required", quantity: 6, percentage: 90)
+    rim = @bike_shop.items.create(name: "Rim", description: "Strong spokes.", price: 10, image: "https://cdn10.bigcommerce.com/s-6w6qcuo4/product_images/attribute_rule_images/19719_zoom_1516397191.jpg", inventory: 30)
+    user = User.create(name: "User(Colin)", address: "123 Test St", city: "New York", state: "NY", zip: "80204", email: "user@example.com", password: "password_regular", role: 1)
+    seat = @bike_shop.items.create(name: "Bike Seat", description: "Squishy tushy.", price: 100, image: "https://www.sefiles.net/images/library/zoom/planet-bike-little-a.r.s-bike-seat-231296-1-19-9.jpg", inventory: 17)
+
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+    visit "/items/#{rim.id}"
+    click_on "Add To Cart"
+    visit "/cart"
+    click_on "+1"
+    click_on "+1"
+    click_on "+1"
+    within("#total") do
+      expect(page).to have_content("Total: $40.00")
+    end
+
+    click_on "+1"
+    within("#total") do
+      expect(page).to have_content("Total: $25.00")
+    end
+
+    visit "/items/#{seat.id}"
+    click_on "Add To Cart"
+
+    visit "/cart"
+    within("#total") do
+      expect(page).to have_content("Total: $125.00")
+    end
+
+    within("#cart-item-#{rim.id}") do
+      click_on "-1"
+    end
+
+    within("#total") do
+      expect(page).to have_content("Total: $140.00")
+    end
+
   end
 end
