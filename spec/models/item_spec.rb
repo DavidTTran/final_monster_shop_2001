@@ -95,5 +95,14 @@ describe Item, type: :model do
       expect(tire.image). to eql("https://dapp.dblog.org/img/default.jpg")
       expect(rim.image).to eql(rim.image)
     end
+
+    it "#apply_discount calculate the discounted_price based on the discount passed" do
+      bike_shop = Merchant.create(name: "Brian's Bike Shop", address: '123 Bike Rd.', city: 'Richmond', state: 'VA', zip: 23137)
+      discount_1 = bike_shop.discounts.create(quantity: 5, percentage: 50)
+      rim = bike_shop.items.create(name: "Rim", description: "Strong spokes.", price: 10, image: "https://cdn10.bigcommerce.com/s-6w6qcuo4/product_images/attribute_rule_images/19719_zoom_1516397191.jpg", inventory: 30)
+
+      rim.apply_discount(discount_1)
+      expect(rim.discounted_price).to eq(5.0)
+    end
   end
 end

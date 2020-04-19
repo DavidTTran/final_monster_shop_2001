@@ -71,13 +71,11 @@ class Cart
     end
   end
 
-  private
-
   def apply_discount(item)
     discount = item.merchant.discounts.find_all do |discount|
       discount.quantity <= items[item]
-    end.max { |discount| discount.percentage }
+    end.max_by { |discount| discount.percentage }
 
-    item.update(price: item.apply_discount(discount))
+    item.apply_discount(discount)
   end
 end
