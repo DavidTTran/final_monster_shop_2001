@@ -49,13 +49,16 @@ class Cart
   end
 
   def discounted_subtotal(item)
-    apply_discount(item)
-    item.discounted_price * @contents[item.id.to_s]
+    if apply_discount(item)
+      item.discounted_price * @contents[item.id.to_s]
+    else
+      item.price * @contents[item.id.to_s]
+    end
   end
 
   def discounted_total
     items.sum do |item, quantity|
-      if !item.discounted_price.nil?
+      if apply_discount(item)
         item.discounted_price * quantity
       else
         item.price * quantity

@@ -42,7 +42,11 @@ class Item <ApplicationRecord
   end
 
   def apply_discount(discount)
-    self.discounted_price = discount.percentage.to_f / 100 * self.price
-    self.save
+    if discount.nil?
+      false
+    else
+      self.discounted_price = discount.percentage.to_f / 100 * self.price
+      self.save
+    end
   end
 end

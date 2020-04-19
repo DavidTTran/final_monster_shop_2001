@@ -31,7 +31,7 @@ class UserOrdersController < ApplicationController
         order.item_orders.create({
           item: item,
           quantity: quantity,
-          price: item.price
+          price: (item.discounted_price.nil? ? item.price : item.discounted_price)
           })
       end
       session.delete(:cart)
