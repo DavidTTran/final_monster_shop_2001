@@ -47,4 +47,37 @@ class Cart
   def limit_reached?(item)
     @contents[item] == Item.find(item).inventory
   end
+
+  def discounted_subtotal(item)
+    apply_discount(item)
+    item.discounted_price * @contents[item.id.to_s]
+  end
+
+  def discounted_total
+    items.sum do |item, quantity|
+      if !item.discounted_price.nil?
+        item.discounted_price * quantity
+      else
+        item.price * quantity
+      end
+    end
+  end
+
+  def discount_applied?
+    items.any? do |item, quantity|
+      item.merchant.discounts.any? do |discount|
+        quantity >= discount.quantity
+      end
+    end
+  end
+
+  private
+
+  def apply_discount(item)
+    discount = item.merchant.discounts.find_all do |discount|
+      discount.quantity <= items[item]
+    end.max { |discount| discount.percentage }
+
+    item.update(price: item.apply_discount(discount))
+  end
 end

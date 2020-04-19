@@ -1,62 +1,70 @@
 <h1>Cart</h1>
 
-<% if !@items.empty? %>
-<center>
-<table class = "cart-items">
-  <tr>
-    <th>Item</th>
-    <th>Sold By</th>
-    <th>Price</th>
-    <th>Quantity</th>
-    <th>Subtotal</th>
-  </tr>
-  <% @items.each do |item,quantity| %>
-    <tr id= "cart-item-<%=item.id%>">
-      <td>
-        <p align = "center">
-          <span>
-            <img align = "center" id="cart-image" src= <%= item.image %>>
-            <%=link_to item.name, "/items/#{item.id}" %>
-          </span>
-        </p>
-      </td>
-      <td>
-        <p align = "center">
-          <%=link_to item.merchant.name, "/merchants/#{item.merchant.id}"%>
-        </p>
-      </td>
-      <td>
-        <p><%=number_to_currency(item.price)%></p>
-      </td>
-      <td>
-        <center>
-          <p id="<%= item.id %>-quantity">
-            <%= link_to "-1", cart_update_path(item.id, quantity: "dec"), method: :patch %>
-            <%= quantity %>
-            <%= link_to "+1", cart_update_path(item.id, quantity: "inc"), method: :patch %>
-          </p>
-          <p><%= link_to "Remove", "/cart/#{item.id}",method: :delete %></p>
-        </center>
-        </td>
-      <td>
-        <p><%=number_to_currency(cart.subtotal(item))%></p>
-    </td>
-    </tr>
-  <% end %>
-</table>
-  <p>Total: <%= number_to_currency(cart.total) %></p>
-  <p><%= link_to "Empty Cart", "/cart", method: :delete %></p>
-  <% if current_user.visitor?%>
-    <article id="check_visitor">
-      <p> You need to <%=link_to "login", "/login", method: :get %>
-        or <%=link_to "register", "/register", method: :get %>  in order to checkout. </p>
-    </article>
-  <% else %>
-    <p><%= link_to "Checkout", "profile/orders/new", method: :get %></p>
-  <% end %>
-
-<% else %>
+<% if @items.empty? %>
   <h3 align= "center">Cart is currently empty</h3>
+<% else %>
+  <center>
+    <table class = "cart-items">
+      <tr>
+        <th>Item</th>
+        <th>Sold By</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Subtotal</th>
+      </tr>
+      <% @items.each do |item,quantity| %>
+        <tr id= "cart-item-<%=item.id%>">
+          <td>
+            <p align = "center">
+              <span>
+                <img align = "center" id="cart-image" src= <%= item.image %>>
+                <%=link_to item.name, "/items/#{item.id}" %>
+              </span>
+            </p>
+          </td>
+          <td>
+            <p align = "center">
+              <%=link_to item.merchant.name, "/merchants/#{item.merchant.id}"%>
+            </p>
+          </td>
+          <td>
+            <p><%=number_to_currency(item.price)%></p>
+          </td>
+          <td>
+            <center>
+              <p id="<%= item.id %>-quantity">
+                <%= link_to "-1", cart_update_path(item.id, quantity: "dec"), method: :patch %>
+                <%= quantity %>
+                <%= link_to "+1", cart_update_path(item.id, quantity: "inc"), method: :patch %>
+              </p>
+              <p><%= link_to "Remove", "/cart/#{item.id}",method: :delete %></p>
+            </center>
+          </td>
+          <td>
+            <p>
+              <% if cart.discount_applied? %>
+                <%= number_to_currency(cart.discounted_subtotal(item)) %>
+              <% else  %>
+                <%= number_to_currency(cart.subtotal(item)) %></p>
+              <% end  %>
+          </td>
+        </tr>
+        <% end %>
+      </table>
+      <% if cart.discount_applied? %>
+        Total: <%= number_to_currency(cart.discounted_total) %>
+      <% else  %>
+        Total: <%= number_to_currency(cart.total) %>
+      <% end %>
+      <%= link_to "Empty Cart", "/cart", method: :delete %>
+      <% if current_user.visitor?%>
+        <article id="check_visitor">
+          <p> You need to <%=link_to "login", "/login", method: :get %>
+          or <%=link_to "register", "/register", method: :get %>  in order to checkout. </p>
+        </article>
+      <% else %>
+        <p><%= link_to "Checkout", "profile/orders/new", method: :get %></p>
+      <% end %>
 <% end %>
 <table>
   <center><%= link_to "Go Back", request.referer %>

@@ -40,4 +40,9 @@ class Item <ApplicationRecord
     self.image = "https://dapp.dblog.org/img/default.jpg" if self.image == ""
     self.errors.add(:inventory, "Inventory must be greater than 0,") if self.inventory < 1
   end
+
+  def apply_discount(discount)
+    self.discounted_price = discount.percentage.to_f / 100 * self.price
+    self.save
+  end
 end
