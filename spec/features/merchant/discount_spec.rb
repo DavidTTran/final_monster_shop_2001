@@ -91,6 +91,20 @@ describe "merchant discounts" do
   end
 
   it "automatically applies to items that equal or are greater than the quantity" do
-    
+    discount_1 = @bike_shop.discounts.create(quantity: 5, percentage: 50)
+    discount_2 = @bike_shop.discounts.create(quantity: 100, percentage: 90)
+    rim = @bike_shop.items.create(name: "Rim", description: "Strong spokes.", price: 10, image: "https://cdn10.bigcommerce.com/s-6w6qcuo4/product_images/attribute_rule_images/19719_zoom_1516397191.jpg", inventory: 30)
+    user = User.create(name: "User(Colin)", address: "123 Test St", city: "New York", state: "NY", zip: "80204", email: "user@example.com", password: "password_regular", role: 1)
+
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
+    visit "/items/#{rim.id}"
+    click_on "Add To Cart"
+    visit "/cart"
+    click_on "+1"
+    click_on "+1"
+    click_on "+1"
+    expect(page).to have_content("Total: $40.00")
+    click_on "+1"
+    expect(page).to have_content("Total: $25.00")
   end
 end
