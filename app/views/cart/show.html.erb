@@ -51,11 +51,13 @@
         </tr>
         <% end %>
       </table>
-      <% if cart.discount_applied? %>
-        Total: <%= number_to_currency(cart.discounted_total) %>
-      <% else  %>
-        Total: <%= number_to_currency(cart.total) %>
-      <% end %>
+      <section id="total">
+        <% if cart.discount_applied? %>
+          Total: <%= number_to_currency(cart.discounted_total) %>
+        <% else  %>
+          Total: <%= number_to_currency(cart.total) %>
+        <% end %>
+      </section><br>
       <%= link_to "Empty Cart", "/cart", method: :delete %>
       <% if current_user.visitor?%>
         <article id="check_visitor">
