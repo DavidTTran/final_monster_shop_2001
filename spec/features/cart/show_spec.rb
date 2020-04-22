@@ -80,8 +80,7 @@ RSpec.describe 'Cart show' do
       admin = User.create(name: "Admin", address: "123 Test St", city: "Denver", state: "CO", zip: "80204", email: "admin@example.com", password: "admin", role: 3)
       dog_shop = Merchant.create(name: "Brian's Dog Shop", address: '125 Doggo St.', city: 'Denver', state: 'CO', zip: 80210)
       pull_toy = dog_shop.items.create(name: "Pull Toy", description: "Great pull toy!", price: 10, image: "http://lovencaretoys.com/image/cache/dog/tug-toy-dog-pull-9010_2-800x800.jpg", inventory: 32)
-      # order1 = Order.create(id: 3, name: "Colin", address: "400 Wash", city: "Denver", state: "CO", zip: 80203)
-      # ItemOrder.create(order_id: order1.id, item: pull_toy, quantity: 1, price: pull_toy.price)
+
       visit '/login'
 
       fill_in :email, with: user.email

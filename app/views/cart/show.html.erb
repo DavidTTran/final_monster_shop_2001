@@ -42,21 +42,13 @@
           </td>
           <td>
             <p>
-              <% if cart.discount_applied? %>
-                <%= number_to_currency(cart.discounted_subtotal(item)) %>
-              <% else  %>
-                <%= number_to_currency(cart.subtotal(item)) %></p>
-              <% end  %>
+              <%= number_to_currency(cart.subtotal(item)) %>
           </td>
         </tr>
         <% end %>
       </table>
       <section id="total">
-        <% if cart.discount_applied? %>
-          Total: <%= number_to_currency(cart.discounted_total) %>
-        <% else  %>
-          Total: <%= number_to_currency(cart.total) %>
-        <% end %>
+        Total: <%= number_to_currency(cart.total) %>
       </section><br>
       <%= link_to "Empty Cart", "/cart", method: :delete %>
       <% if current_user.visitor?%>

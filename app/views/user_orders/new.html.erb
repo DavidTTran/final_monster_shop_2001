@@ -14,11 +14,7 @@
       <td><%= number_to_currency(item.price) %></td>
       <td><%= quantity %></td>
       <td>
-        <% if cart.discount_applied? %>
-          <%= number_to_currency(cart.discounted_subtotal(item)) %>
-        <% else  %>
-          <%= number_to_currency(cart.subtotal(item)) %>
-        <% end %>
+        <%= number_to_currency(cart.subtotal(item)) %>
       </td>
       <td><%= link_to item.merchant.name, "/merchants/#{item.merchant_id}" %></td>
       <td><%= item.inventory %> in stock</td>
@@ -27,11 +23,7 @@
 </table>
 <h2>
   <center>
-    <% if cart.discount_applied? %>
-      Total: <%= number_to_currency(cart.discounted_total) %>
-    <% else %>
-      Total: <%= number_to_currency(cart.total) %>
-    <% end %>
+    Total: <%= number_to_currency(cart.total) %>
   </center>
 </h2>
 <center>

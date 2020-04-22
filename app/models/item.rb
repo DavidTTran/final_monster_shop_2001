@@ -45,7 +45,7 @@ class Item <ApplicationRecord
     if discount.nil?
       false
     else
-      self.discounted_price = discount.percentage.to_f / 100 * self.price
+      self.discounted_price = self.price - (discount.percentage.to_f / 100 * self.price)
       self.save
     end
   end

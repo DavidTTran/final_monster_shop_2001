@@ -98,18 +98,18 @@ RSpec.describe Cart do
       expect(rim.discounted_price).to eq(5)
     end
 
-    it "#discounted_subtotal calculates the total of an item based on quantity if a discount is applied" do
+    it "#subtotal calculates the total of an item based on quantity if a discount is applied" do
       bike_shop = Merchant.create(name: "Brian's Bike Shop", address: '123 Bike Rd.', city: 'Richmond', state: 'VA', zip: 23137)
       discount_1 = bike_shop.discounts.create(name: "Test Discount", quantity: 5, percentage: 50)
       rim = bike_shop.items.create(name: "Rim", description: "Strong spokes.", price: 10, image: "https://cdn10.bigcommerce.com/s-6w6qcuo4/product_images/attribute_rule_images/19719_zoom_1516397191.jpg", inventory: 30)
       axle = bike_shop.items.create(name: "Handle Grips", description: "Keep on hangin' on.", price: 20, image: "https://images.amain.com/images/large/bikes/pnw-components/lga25tb.jpg?width=950", inventory: 12)
 
       cart = Cart.new({"#{rim.id}" => 5, "#{axle.id}" => 1 })
-      expect(cart.discounted_subtotal(rim)).to eq(25)
-      expect(cart.discounted_subtotal(axle)).to eq(20)
+      expect(cart.subtotal(rim)).to eq(25)
+      expect(cart.subtotal(axle)).to eq(20)
     end
 
-    it "#discounted_total calculates the total of the cart with applied discounts" do
+    it "#total calculates the total of the cart with applied discounts" do
       bike_shop = Merchant.create(name: "Brian's Bike Shop", address: '123 Bike Rd.', city: 'Richmond', state: 'VA', zip: 23137)
       discount_1 = bike_shop.discounts.create(name: "Test Discount", quantity: 5, percentage: 50)
       rim = bike_shop.items.create(name: "Rim", description: "Strong spokes.", price: 10, image: "https://cdn10.bigcommerce.com/s-6w6qcuo4/product_images/attribute_rule_images/19719_zoom_1516397191.jpg", inventory: 30)
@@ -117,7 +117,7 @@ RSpec.describe Cart do
 
       cart = Cart.new({"#{rim.id}" => 5, "#{axle.id}" => 4})
       rim.apply_discount(discount_1)
-      expect(cart.discounted_total).to eq(105)
+      expect(cart.total).to eq(105)
     end
   end
 end
